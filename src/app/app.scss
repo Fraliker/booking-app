@@ -14,3 +14,31 @@
 // To declare rules for a specific mode, create a child rule
 // for the .md, .ios, or .wp mode classes. The mode class is
 // automatically applied to the <body> element in the app.
+.home-container {
+     display: -webkit-flex;
+     -webkit-flex-direction: column;
+     flex-direction: column;
+     height: 100%;
+}
+.home-container > .row {
+     -webkit-flex: 1;
+     flex: 1;
+     padding: 4px;
+}
+
+.header {
+     -webkit-flex: 0.5 !important;
+     flex: 0.5 !important;
+     -webkit-align-items: center;
+     align-items: center;
+     background-color: #1abc9c;
+}
+ 
+.icon-row {
+     -webkit-align-items: center;
+     align-items: center;
+}
+
+.text-center {
+    text-align: center;
+}
