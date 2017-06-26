@@ -1,7 +1,7 @@
 import { Component } from '@angular/core';
 import { IonicPage, NavController, NavParams } from 'ionic-angular';
-
-
+import { Storage } from '@ionic/storage';
+import {Validators, FormBuilder, FormGroup } from '@angular/forms';
 /**
  * Generated class for the RoomBookingPage page.
  *
@@ -17,6 +17,8 @@ export class RoomBookingPage {
 
     eventSource;
     viewTitle;
+
+    bookingForm: FormGroup;
 
     isToday:boolean;
     calendar = {
@@ -50,15 +52,33 @@ export class RoomBookingPage {
         }
     };
 
-  constructor(public navCtrl: NavController, public navParams: NavParams) {
-  }
+  constructor(public navCtrl: NavController, public navParams: NavParams,public storage:Storage, private formBuilder: FormBuilder) {
+        this.bookingForm = this.formBuilder.group({
+            fullName: ['', Validators.required],
+            room: ['', Validators.required],
+            bookDate: ['', Validators.required],
+            startTime: ['', Validators.required],
+            endTime: ['', Validators.required]
+        });
+}
 
   ionViewDidLoad() {
     console.log('ionViewDidLoad RoomBookingPage');
   }
 
   submitForm() {
-    console.log('open calendar');
+    this.storage.get("booking").then((val) => {
+        if(val == null) { 
+            console.log('null');
+            let x = [];
+            x.push({'name':'wiyanto'});
+            this.storage.set("booking",x);
+        } else {
+            val.push({'name':'wiyanto123'});
+            this.storage.set("booking",val);
+        }
+    });
+    console.log('open calendar '+JSON.stringify(this.bookingForm.value));
   }
 
   loadEvents() {

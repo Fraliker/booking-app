@@ -11,15 +11,18 @@
 </ion-header>
 <ion-content padding>
 <ion-list>
-<form (ngSubmit)="submitForm()">
+<form (ngSubmit)="submitForm()" [formGroup]="bookingForm">
   <ion-item>
     <ion-label floating>Full Name</ion-label>
-    <ion-input type="text" [(ngModel)]="fullName" name="fullName"></ion-input>
+    <ion-input type="text" formControlName="fullName" required></ion-input>
+    <div *ngIf="formErrors.fullName" class="alert alert-danger">
+      {{ formErrors.name }}
+    </div>
   </ion-item>
 
  <ion-item>
     <ion-label>Room</ion-label>
-    <ion-select [(ngModel)]="room" name="room">
+    <ion-select formControlName="room">
       <ion-option value="rm1">Room 1</ion-option>
       <ion-option value="rm2">Room 2</ion-option>
       <ion-option value="rm3">Room 3</ion-option>
@@ -27,21 +30,21 @@
   </ion-item>
   <ion-item>
     <ion-label>Book Date</ion-label>
-    <ion-datetime displayFormat="MMM/DD/YYYY" pickerFormat="MMM/DD/YYYY" [(ngModel)]="bookDate" name="bookDate"></ion-datetime>
+    <ion-datetime displayFormat="MMM/DD/YYYY" pickerFormat="MMM/DD/YYYY" formControlName="bookDate"></ion-datetime>
   </ion-item>
 
   <ion-item>
     <ion-label>Start Time</ion-label>
-    <ion-datetime displayFormat="h:mm A" pickerFormat="h mm A" [(ngModel)]="startTime" name="startTime"></ion-datetime>
+    <ion-datetime displayFormat="h:mm A" pickerFormat="h mm A" formControlName="startTime"></ion-datetime>
   </ion-item>
 
   <ion-item>
     <ion-label>End Time</ion-label>
-    <ion-datetime displayFormat="h:mm A" pickerFormat="h mm A" [(ngModel)]="endTime" name="endTime"></ion-datetime>
+    <ion-datetime displayFormat="h:mm A" pickerFormat="h mm A" formControlName="endTime"></ion-datetime>
   </ion-item>
 
     
-  <button ion-button type="submit" block>Submit</button>
+  <button ion-button type="submit" [disabled]="!bookingForm.valid" block>Submit</button>
 </form>
 </ion-list>
 

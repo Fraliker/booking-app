@@ -12,7 +12,8 @@ import { SplashScreen } from '@ionic-native/splash-screen';
 import { NgCalendarModule  } from 'ionic2-calendar';
 import { RoomBookingPageModule  } from '../pages/room-booking/room-booking.module';
 import { RoomStatusPageModule  } from '../pages/room-status/room-status.module';
-
+import { SQLite } from '@ionic-native/sqlite';
+import { IonicStorageModule } from '@ionic/storage';
 
 @NgModule({
   declarations: [
@@ -26,7 +27,8 @@ import { RoomStatusPageModule  } from '../pages/room-status/room-status.module';
     NgCalendarModule,
     RoomBookingPageModule,
     RoomStatusPageModule,
-    IonicModule.forRoot(MyApp)
+    IonicModule.forRoot(MyApp),
+    IonicStorageModule.forRoot()
   ],
   bootstrap: [IonicApp],
   entryComponents: [
