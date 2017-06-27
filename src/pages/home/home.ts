@@ -16,14 +16,14 @@ export class HomePage {
 
    ionViewDidLoad() {
 
-    this.storage.ready().then(() => {
-      this.storage.get("booking").then((val) => {
+    // this.storage.ready().then(() => {
+    //   this.storage.get("booking").then((val) => {
         
-        val.forEach(element => {
-          console.log("val "+JSON.stringify(element));  
-        });
-       });
-    });
+    //     val.forEach(element => {
+    //       console.log("val "+JSON.stringify(element));  
+    //     });
+    //    });
+    // });
      
       
    }
