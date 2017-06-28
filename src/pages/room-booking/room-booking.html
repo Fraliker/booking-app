@@ -27,7 +27,7 @@
   </ion-item>
   <ion-item>
     <ion-label>Book Date</ion-label>
-    <ion-datetime displayFormat="MMM/DD/YYYY" pickerFormat="MMM/DD/YYYY" formControlName="bookDate"></ion-datetime>
+    <ion-datetime displayFormat="DD/MMM/YYYY" pickerFormat="DD/MMM/YYYY" formControlName="bookDate"></ion-datetime>
   </ion-item>
 
   <ion-item>
@@ -40,7 +40,7 @@
     <ion-datetime displayFormat="h:mm A" pickerFormat="h mm A" formControlName="endTime"></ion-datetime>
   </ion-item>
 
-    
+
   <button ion-button type="submit" [disabled]="!bookingForm.valid" block>Submit</button>
 </form>
 </ion-list>
