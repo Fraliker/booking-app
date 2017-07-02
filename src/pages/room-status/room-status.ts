@@ -1,6 +1,10 @@
-import { Component } from '@angular/core';
-import { IonicPage, NavController, NavParams } from 'ionic-angular';
-
+import { Component, ViewChild } from '@angular/core';
+import { IonicPage, NavController, NavParams, ToastController } from 'ionic-angular';
+import { BookingDataProvider, Booking } from '../../providers/booking-data/booking-data';
+import { RoomBookingPage } from '../room-booking/room-booking';
+import { Subscription } from 'rxjs/Subscription';
+import { CalendarComponent } from "ionic2-calendar/calendar";
+import * as Moment from "moment";
 /**
  * Generated class for the RoomStatusPage page.
  *
@@ -13,9 +17,12 @@ import { IonicPage, NavController, NavParams } from 'ionic-angular';
   templateUrl: 'room-status.html',
 })
 export class RoomStatusPage {
+    @ViewChild(CalendarComponent) myCalendar:CalendarComponent;
 
-    eventSource;
+    subscription:Subscription;
+    eventSource = [];
     viewTitle;
+    selectedDate:Date;
 
     isToday:boolean;
     calendar = {
@@ -50,11 +57,35 @@ export class RoomStatusPage {
     };
 
 
-    constructor(public navCtrl: NavController, public navParams: NavParams) {
-    }
+    constructor(public navCtrl: NavController, public toastCtrl: ToastController, public navParams: NavParams, public bookingDataProvider: BookingDataProvider) {
+        
+        this.subscription = this.bookingDataProvider.getSubject().subscribe(message => { 
+            if(message) {
+                console.log('from observable ' + JSON.stringify(message));
+                if(message.operation=='UPDATE') {  
+                    this.eventSource = this.eventSource.map(value => {
+                        if(value.id === message.id) {
+                            return message;
+                        } else {
+                            return value;
+                        }
+                    });
+                } else if(message.operation=='DELETE') {
+                    this.eventSource = this.eventSource.filter(value => {
+                        if(value.id === message.id) {
+                            return false;
+                        } else {
+                            return true;
+                        }
+                    });
+                } else {
+                    this.eventSource.push(message);
+                }
+                
+                this.myCalendar.loadEvents();
+            }
+        });
 
-    loadEvents() {
-        this.eventSource = this.createRandomEvents();
     }
 
     onViewTitleChanged(title) {
@@ -62,7 +93,8 @@ export class RoomStatusPage {
     }
 
     onEventSelected(event) {
-        console.log('Event selected:' + event.startTime + '-' + event.endTime + ',' + event.title);
+        console.log('Event selected:' + event.startTime + '-' + event.endTime + ',' + event.title, +', '+ event.id);
+        this.navCtrl.push(RoomBookingPage, event);
     }
 
     changeMode(mode) {
@@ -80,67 +112,10 @@ export class RoomStatusPage {
 
     onCurrentDateChanged(event:Date) {
         var today = new Date();
-        today.setHours(0, 0, 0, 0);
-        event.setHours(0, 0, 0, 0);
+        today.setHours(9, 0, 0, 0);
+        event.setHours(9, 0, 0, 0);
         this.isToday = today.getTime() === event.getTime();
-    }
-
-    createRandomEvents() {
-        var events = [];
-        var date = new Date();
-        var startDay = Math.floor(Math.random() * 90) - 45;
-        var endDay = Math.floor(Math.random() * 2) + startDay;
-        var startMinute = Math.floor(Math.random() * 24 * 60);
-        var endMinute = Math.floor(Math.random() * 180) + startMinute;
-        var startTime = new Date(2017, 5 , 27, 2, 0);
-        var endTime = new Date(2017, 5 , 27, 3, 0);
-        events.push({
-            title: 'Event - 123',
-            startTime: startTime,
-            endTime: endTime,
-            allDay: false,
-            roomNo: 'sadasd'
-        });
-        events.push({
-            title: 'Event - 1234',
-            startTime: new Date(2017, 5 , 27, 2, 30),
-            endTime: endTime,
-            allDay: false
-        });
-
-        // for (var i = 0; i < 50; i += 1) {
-        //     var date = new Date();
-        //     var eventType = Math.floor(Math.random() * 2);
-        //     var startDay = Math.floor(Math.random() * 90) - 45;
-        //     var endDay = Math.floor(Math.random() * 2) + startDay;
-        //     var startTime;
-        //     var endTime;
-        //     if (eventType === 0) {
-        //         startTime = new Date(Date.UTC(date.getUTCFullYear(), date.getUTCMonth(), date.getUTCDate() + startDay));
-        //         if (endDay === startDay) {
-        //             endDay += 1;
-        //         }
-        //         endTime = new Date(Date.UTC(date.getUTCFullYear(), date.getUTCMonth(), date.getUTCDate() + endDay));
-        //         events.push({
-        //             title: 'All Day - ' + i,
-        //             startTime: startTime,
-        //             endTime: endTime,
-        //             allDay: true
-        //         });
-        //     } else {
-        //         var startMinute = Math.floor(Math.random() * 24 * 60);
-        //         var endMinute = Math.floor(Math.random() * 180) + startMinute;
-        //         startTime = new Date(date.getFullYear(), date.getMonth(), date.getDate() + startDay, 0, date.getMinutes() + startMinute);
-        //         endTime = new Date(date.getFullYear(), date.getMonth(), date.getDate() + endDay, 0, date.getMinutes() + endMinute);
-        //         events.push({
-        //             title: 'Event - ' + i,
-        //             startTime: startTime,
-        //             endTime: endTime,
-        //             allDay: false
-        //         });
-        //     }
-        // }
-        return events;
+        this.selectedDate = event;
     }
 
     onRangeChanged(ev) {
@@ -155,7 +130,59 @@ export class RoomStatusPage {
 
 
   ionViewDidLoad() {
-    console.log('ionViewDidLoad RoomStatusPage');
+    this.bookingDataProvider.loadEvent();
+
+    // setInterval(() => {
+    //   this.eventSource.forEach(value => {
+    //     let eventStartTime = Moment(value.startTime);
+    //     let eventMaxStartTime = eventStartTime.clone().add(10,'minutes');
+    //     let now = Moment();
+    //     if(now.isSameOrAfter(eventMaxStartTime)) {
+    //         console.log('EXPIRED' + eventStartTime.toString()+' '+eventMaxStartTime.toString());
+    //         this.bookingDataProvider.getSubject().next({
+    //             id: value.id,
+    //             operation: 'DELETE'
+    //         });
+    //         this.presentToast(value);
+    //     }
+        
+    //     //this.presentToast(null);
+    //   });
+    // }, 10000); 
   }
 
+   presentToast(booking:Booking) {
+    let toast = this.toastCtrl.create({
+      message: `Booking ${booking.room} - ${booking.fullName} on ${booking.bookDate} - ${booking.bookStartTime} was deleted successfully`,
+      showCloseButton: true
+    });
+    toast.present();
+  }
+
+  ionViewWillUnload() {
+      this.subscription.unsubscribe();
+  }
+
+   goToRoomBooking() {
+     this.navCtrl.push(RoomBookingPage, {
+         bookDate: this.selectedDate.toISOString(),
+         room: 'Room 7A',
+         bookStartTime: '09:00',
+         bookEndTime: '10:00'
+     });
+   }
+
+   getStyle(booking:Booking) {
+       let color;
+       if(booking.room==='Room 7A') {
+           color = '#3399EE';
+       } else if(booking.room==='Room 7B') {
+           color = '#ff66aa';
+       } else if(booking.room==='Room 7C') {
+           color = '#ee9900';
+       } else {
+           color = '#00eecc';
+       }
+       return color;
+   }
 }

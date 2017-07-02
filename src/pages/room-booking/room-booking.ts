@@ -1,8 +1,10 @@
 import { Component } from '@angular/core';
 import { IonicPage, NavController, NavParams } from 'ionic-angular';
-import { Storage } from '@ionic/storage';
 import { Validators, FormBuilder, FormGroup } from '@angular/forms';
-import { Booking }  from '../../app/model/booking';
+import { BookingDataProvider } from '../../providers/booking-data/booking-data';
+import { Storage } from '@ionic/storage';
+import { AlertController } from 'ionic-angular';
+import * as Moment from "moment";
 /**
  * Generated class for the RoomBookingPage page.
  *
@@ -16,44 +18,81 @@ import { Booking }  from '../../app/model/booking';
 })
 export class RoomBookingPage {
 
-    eventSource;
-    viewTitle;
-    booking:Booking;
+  eventSource;
+  viewTitle;
+  enableDelete = false;
+  enableCheckin = false;
+  bookingForm: FormGroup;
+  idValue;
 
-    bookingForm: FormGroup;
+  constructor(public navCtrl: NavController, public navParams: NavParams, private formBuilder: FormBuilder, private storage: Storage, public bookingDataProvider: BookingDataProvider, public alertCtrl: AlertController) {    
+    this.initForm(navParams.data);
+  }
 
 
-  constructor(public navCtrl: NavController, public navParams: NavParams,public storage:Storage, private formBuilder: FormBuilder) {
-        this.bookingForm = this.formBuilder.group({
-            fullName: ['', Validators.required],
-            room: ['rm1', Validators.required],
-            bookDate: [new Date().toISOString(), Validators.required],
-            startTime: ['09:00', Validators.required],
-            endTime: ['10:00', Validators.required]
-        });
+  initForm(initialValue) {
+    if(initialValue.id) {
+      this.idValue = { id : initialValue.id };
+      this.enableDelete = true;
 
-        //this.bookingForm.setValue(this.booking);
-}
-
-  ionViewDidLoad() {
-    console.log('xx1');
-
+      let eventStartTime = Moment(initialValue.startTime);
+      let eventMaxStartTime = eventStartTime.clone().add(10,'minutes');
+      let eventMinStartTime = eventStartTime.clone().subtract(30,'minutes');
+      let now = Moment();
+      if(now.isBetween(eventMinStartTime,eventMaxStartTime)) {
+          this.enableCheckin = true;
+      }
+    }
+    this.bookingForm = this.formBuilder.group({
+      fullName: [initialValue.fullName, Validators.required],
+      room: [initialValue.room, Validators.required],
+      bookDate: [new Date(initialValue.bookDate).toISOString(), Validators.required],
+      bookStartTime: [initialValue.bookStartTime, Validators.required],
+      bookEndTime: [initialValue.bookEndTime, Validators.required],
+    });
   }
 
   submitForm() {
-    this.storage.get
-    this.storage.get("booking").then((val) => {
-        if(val == null) {
-            console.log('null');
-            let x = [];
-            x.push({'name':'wiyanto'});
-            this.storage.set("booking",x);
-        } else {
-            val.push({'name':'wiyanto123'});
-            this.storage.set("booking",val);
-        }
+    let bookingFormValue = { ...this.bookingForm.value, ...this.idValue };
+    this.bookingDataProvider.save(bookingFormValue).then(data => {
+      //this.initForm();
+      this.showAlert('Successfully booked the room');
+      this.navCtrl.pop();
     });
-    console.log('open calendar '+JSON.stringify(this.bookingForm.value));
+  }
+
+  delete() {
+    this.bookingDataProvider.delete(this.idValue.id).then( data => {
+      this.showAlert('Successfully cancelled the room');
+      this.navCtrl.pop();
+    }
+    );
+  }
+
+  checkIn() {
+    this.bookingDataProvider.checkIn(this.idValue.id).then( data => {
+      this.showAlert('Successfully check in the room');
+      this.navCtrl.pop();
+    }
+    );
+  }
+
+  adjustEndTime(e) {
+    let hour = `${e.hour+1}`;
+    hour = hour.length==1 ? `0${hour}`:hour;
+
+    let minute = `${e.minute}`;
+    minute = minute.length==1 ? `0${minute}`:minute;
+    this.bookingForm.patchValue({bookEndTime: `${hour}:${minute}`});
+  }
+
+  showAlert(msg) {
+    let alert = this.alertCtrl.create({
+      title: 'Information',
+      subTitle: msg,
+      buttons: ['OK']
+    });
+    alert.present();
   }
 
 }

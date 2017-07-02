@@ -6,45 +6,99 @@
 -->
 <ion-header>
 
-  <ion-navbar>
-    <ion-title>room-status</ion-title>
-    <ion-buttons end>
-        <button ion-button [disabled]="isToday" (click)="today()">Today</button>
-        <button ion-button (click)="changeMode('month')">M</button>
-        <button ion-button (click)="changeMode('week')">W</button>
-        <button ion-button (click)="changeMode('day')">D</button>
-        <button ion-button (click)="loadEvents()">Load Events</button>
-    </ion-buttons>
+  <ion-navbar color="primary">
+    <ion-title> <ion-icon name="calendar"></ion-icon>&nbsp;Booking Calendar</ion-title>
   </ion-navbar>
+  <ion-toolbar color="secondary">
+    <ion-buttons>
+        <button ion-button medium [disabled]="isToday" (click)="today()">Today</button>
+        <button ion-button medium (click)="changeMode('month')">Month</button>
+        <button ion-button medium (click)="changeMode('week')">Week</button>
+        <button ion-button medium (click)="changeMode('day')">Day</button>
+        
+    </ion-buttons>
+    <ion-buttons end>
+      {{selectedDate|date: 'dd MMM yyyy'}}
+    </ion-buttons>
+  </ion-toolbar>
 </ion-header>
 
 
 <ion-content padding>
-    <template #template let-displayEvent="displayEvent">
+  <ion-fab top right edge>
+    <button ion-fab mini (click)="goToRoomBooking()"><ion-icon name="add"></ion-icon></button>
+  </ion-fab>
+    <template #templateDay let-displayEvent="displayEvent">
         <style>
             div {
-              background-color: green;
               overflow: hidden;
               height: 100%;
               padding: 2px;
             }
         </style>
-        <div class="calendar-event-inner">
-          {{displayEvent.event.title}} -
-          {{displayEvent.event.roomNo}}
-          </div>
+        <div class="calendar-event-inner" [style.background-color]="getStyle(displayEvent.event)" >
+          {{displayEvent.event.title}} 
+        </div>
+    </template> 
+
+    <template #templateWeek let-displayEvent="displayEvent">
+      <style>
+          div {
+            overflow: hidden;
+            height: 100%;
+            padding: 2px;
+          }
+      </style>
+      <div class="calendar-event-inner"  [style.background-color]="getStyle(displayEvent.event)">
+        {{displayEvent.event.title}}
+      </div>
     </template>
 
-        <!--[dayviewNormalEventTemplate]="template"-->
+    <template #templateMonth let-view="view" let-row="row" let-col="col">
+      {{view.dates[row*7+col].label}}
+    </template>
+
+    <template #templateMonthDetail  let-showEventDetail="showEventDetail" let-selectedDate="selectedDate" let-noEventsLabel="noEventsLabel">
+        <ion-list class="event-detail-container" has-bouncing="false" *ngIf="showEventDetail" overflow-scroll="false">
+            <ion-item *ngFor="let event of selectedDate?.events" (click)="onEventSelected(event)">
+                    <span *ngIf="!event.allDay" class="monthview-eventdetail-timecolumn">
+                        <ion-badge>
+                        {{event.startTime|date: 'HH:mm'}}
+                        -
+                        {{event.endTime|date: 'HH:mm'}}
+                        </ion-badge>
+                    </span>
+                    <ion-badge [style.background-color]="getStyle(event)">{{event.room}}</ion-badge>
+                <span *ngIf="event.allDay" class="monthview-eventdetail-timecolumn">{{allDayLabel}}</span>
+                <ion-icon name="log-in" *ngIf="event.checkin" label="checkin" >&nbsp;</ion-icon>
+                <span class="event-detail">  {{event.fullName}} 
+                    
+                </span>
+                
+            </ion-item>
+            <ion-item *ngIf="selectedDate?.events.length==0">
+                <div class="no-events-label"> 
+                   <ion-badge color="danger">
+                  {{noEventsLabel}}
+                   </ion-badge>
+                  </div>
+            </ion-item>
+        </ion-list>
+    </template>
+
      <calendar [eventSource]="eventSource"
         [calendarMode]="calendar.mode"
         [currentDate]="calendar.currentDate"
+        [scrollToHour]="'7'"
         (onCurrentDateChanged)="onCurrentDateChanged($event)"
         (onRangeChanged)="reloadSource(startTime, endTime)"
         (onEventSelected)="onEventSelected($event)"
         (onTitleChanged)="onViewTitleChanged($event)"
         (onTimeSelected)="onTimeSelected($event)"
-        [dayviewNormalEventTemplate]="template"
+        [dayviewNormalEventTemplate]="templateDay"
+        [weekviewNormalEventTemplate]="templateWeek"
+        [monthviewDisplayEventTemplate]="templateMonth"
+        [monthviewEventDetailTemplate]="templateMonthDetail"
         step="30">
       </calendar>
 </ion-content>

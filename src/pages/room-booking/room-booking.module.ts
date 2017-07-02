@@ -1,6 +1,7 @@
 import { NgModule } from '@angular/core';
 import { IonicPageModule } from 'ionic-angular';
 import { RoomBookingPage } from './room-booking';
+import { BookingDataProvider } from '../../providers/booking-data/booking-data';
 
 @NgModule({
   declarations: [
@@ -11,6 +12,7 @@ import { RoomBookingPage } from './room-booking';
   ],
   exports: [
     RoomBookingPage
-  ]
+  ],
+  providers: [BookingDataProvider]
 })
 export class RoomBookingPageModule {}

@@ -13,7 +13,9 @@ import { NgCalendarModule  } from 'ionic2-calendar';
 import { RoomBookingPageModule  } from '../pages/room-booking/room-booking.module';
 import { RoomStatusPageModule  } from '../pages/room-status/room-status.module';
 import { SQLite } from '@ionic-native/sqlite';
-import { IonicStorageModule } from '@ionic/storage';
+import { IonicStorageModule, Storage } from '@ionic/storage';
+import { HttpModule }    from '@angular/http';
+import { BookingDataProvider } from '../providers/booking-data/booking-data';
 
 @NgModule({
   declarations: [
@@ -27,8 +29,9 @@ import { IonicStorageModule } from '@ionic/storage';
     NgCalendarModule,
     RoomBookingPageModule,
     RoomStatusPageModule,
-    IonicModule.forRoot(MyApp),
-    IonicStorageModule.forRoot()
+    HttpModule,
+    IonicStorageModule.forRoot(),
+    IonicModule.forRoot(MyApp)
   ],
   bootstrap: [IonicApp],
   entryComponents: [
