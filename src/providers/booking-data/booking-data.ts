@@ -14,6 +14,8 @@ import { Subject } from 'rxjs/Subject';
 export class BookingDataProvider {
 
   private subject = new Subject<any>();
+  private deletedSubject = new Subject<any>();
+
   constructor(public http: Http, public storage: Storage) {
   }
 
@@ -46,15 +48,18 @@ export class BookingDataProvider {
 
 
   delete(id): Promise<Booking> {
+    let that = this;
+    let deletedBooking;
     return this.storage.get('bookings').then((data: Booking[]) => {
+      //console.log('start '+id);
       let bookingArray: Booking[] = [];
 
-      let idField = { id: id };
+      let idField = { id };
 
       if (data != null) {
         bookingArray = data;
       }
-      let deletedBooking;
+      
       bookingArray = bookingArray.filter( value => {
         if(value.id === idField.id) {
             deletedBooking = value;
@@ -64,14 +69,18 @@ export class BookingDataProvider {
         }
       });
 
-      console.log('DELX '+JSON.stringify(bookingArray));
-
-      return this.storage.set('bookings', bookingArray).then(() => {
-          let operationField = { operation : 'DELETE'};
-          this.subject.next( { ...idField, ...operationField});
-          return deletedBooking;
-      });
+      //console.log('delete '+JSON.stringify(bookingArray));
+      let operationField = { operation : 'DELETE'};
+      this.subject.next( { ...idField, ...operationField});
+      
+      return bookingArray;
+    }).then( bookingArray => {
+      return that.storage.set('bookings', bookingArray);
+    }).then( () => {
+      console.log('end');  
+      return deletedBooking;
     });
+
   }
 
   checkIn(id): Promise<Booking[]> {

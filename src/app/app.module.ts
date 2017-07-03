@@ -16,7 +16,6 @@ import { SQLite } from '@ionic-native/sqlite';
 import { IonicStorageModule, Storage } from '@ionic/storage';
 import { HttpModule }    from '@angular/http';
 import { BookingDataProvider } from '../providers/booking-data/booking-data';
-import { BackgroundMode } from '@ionic-native/background-mode';
 @NgModule({
   declarations: [
     MyApp,
@@ -43,7 +42,6 @@ import { BackgroundMode } from '@ionic-native/background-mode';
   providers: [
     StatusBar,
     SplashScreen,
-    BackgroundMode,
     {provide: ErrorHandler, useClass: IonicErrorHandler}
   ]
 })

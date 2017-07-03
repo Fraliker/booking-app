@@ -5,7 +5,6 @@ import { RoomBookingPage } from '../room-booking/room-booking';
 import { Subscription } from 'rxjs/Subscription';
 import { CalendarComponent } from "ionic2-calendar/calendar";
 import * as Moment from "moment";
-import { BackgroundMode } from '@ionic-native/background-mode';
 import { Platform } from 'ionic-angular';
 import { Observable } from 'rxjs';
 /**
@@ -61,11 +60,11 @@ export class RoomStatusPage {
     };
 
 
-    constructor(public navCtrl: NavController, public toastCtrl: ToastController, public navParams: NavParams, public bookingDataProvider: BookingDataProvider,public backgroundMode: BackgroundMode, public platform:Platform) {
+    constructor(public navCtrl: NavController, public toastCtrl: ToastController, public navParams: NavParams, public bookingDataProvider: BookingDataProvider, public platform:Platform) {
 
         this.subscription = this.bookingDataProvider.getSubject().subscribe(message => {
             if(message) {
-                console.log('from observable ' + JSON.stringify(message));
+                //console.log('from observable ' + JSON.stringify(message));
                 if(message.operation=='UPDATE') {
                     this.eventSource = this.eventSource.map(value => {
                         if(value.id === message.id) {
@@ -145,8 +144,11 @@ export class RoomStatusPage {
     this.bookingDataProvider.loadEvent();
     var that = this;
     setInterval(() => {
+        that.elapsedCount++;
+    },1000); 
+    setInterval(() => {
 
-      var p = Promise.resolve();
+      var p = Promise.resolve(1);
 
       this.eventSource.map(value => {
           return function() {
@@ -155,17 +157,19 @@ export class RoomStatusPage {
             let now = Moment();
             if(now.isSameOrAfter(eventMaxStartTime) && value.checkin!=true) {
                 console.log('EXPIRED' + eventStartTime.toString()+' '+eventMaxStartTime.toString());
-                that.bookingDataProvider.delete(value.id).then(value1 => {
+                return that.bookingDataProvider.delete(value.id).then(value1 => {
                   that.presentToast(value1);
                   return Promise.resolve(1);
                 });
+            } else {
+                return Promise.resolve(1);
             }
           }
       }).reduce((pacc,fn) => {
         return pacc = pacc.then(fn);
       }, p);
 
-    },30000);
+    },60000);
 
     // setInterval(() => {
 
