@@ -63,13 +63,14 @@ export class BookingDataProvider {
           return true;
         }
       });
+
       console.log('DELX '+JSON.stringify(bookingArray));
 
-      this.storage.set('bookings', bookingArray);
-
-      let operationField = { operation : 'DELETE'};
-      this.subject.next( { ...idField, ...operationField});
-      return Promise.resolve(deletedBooking);
+      return this.storage.set('bookings', bookingArray).then(() => {
+          let operationField = { operation : 'DELETE'};
+          this.subject.next( { ...idField, ...operationField});
+          return deletedBooking;
+      });
     });
   }
 

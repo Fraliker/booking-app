@@ -143,22 +143,29 @@ export class RoomStatusPage {
 
   ionViewDidLoad() {
     this.bookingDataProvider.loadEvent();
+    var that = this;
+    setInterval(() => {
 
-    // setInterval(() => {
-    //   Observable.from(this.eventSource).subscribe(value => {
-    //       let eventStartTime = Moment(value.startTime);
-    //       let eventMaxStartTime = eventStartTime.clone().add(10,'minutes');
-    //       let now = Moment();
+      var p = Promise.resolve();
 
-    //       if(now.isSameOrAfter(eventMaxStartTime) && value.checkin!=true) {
-    //           console.log('EXPIRED' + eventStartTime.toString()+' '+eventMaxStartTime.toString());
-    //           this.bookingDataProvider.delete(value.id).then(value1 => {
-    //               this.presentToast(value1);
-    //           });
+      this.eventSource.map(value => {
+          return function() {
+            let eventStartTime = Moment(value.startTime);
+            let eventMaxStartTime = eventStartTime.clone().add(10,'minutes');
+            let now = Moment();
+            if(now.isSameOrAfter(eventMaxStartTime) && value.checkin!=true) {
+                console.log('EXPIRED' + eventStartTime.toString()+' '+eventMaxStartTime.toString());
+                that.bookingDataProvider.delete(value.id).then(value1 => {
+                  that.presentToast(value1);
+                  return Promise.resolve(1);
+                });
+            }
+          }
+      }).reduce((pacc,fn) => {
+        return pacc = pacc.then(fn);
+      }, p);
 
-    //       }
-    //   });
-    // },10000);
+    },30000);
 
     // setInterval(() => {
 
