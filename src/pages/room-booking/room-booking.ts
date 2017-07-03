@@ -25,7 +25,7 @@ export class RoomBookingPage {
   bookingForm: FormGroup;
   idValue;
 
-  constructor(public navCtrl: NavController, public navParams: NavParams, private formBuilder: FormBuilder, private storage: Storage, public bookingDataProvider: BookingDataProvider, public alertCtrl: AlertController) {    
+  constructor(public navCtrl: NavController, public navParams: NavParams, private formBuilder: FormBuilder, private storage: Storage, public bookingDataProvider: BookingDataProvider, public alertCtrl: AlertController) {
     this.initForm(navParams.data);
   }
 

@@ -5,6 +5,9 @@ import { RoomBookingPage } from '../room-booking/room-booking';
 import { Subscription } from 'rxjs/Subscription';
 import { CalendarComponent } from "ionic2-calendar/calendar";
 import * as Moment from "moment";
+import { BackgroundMode } from '@ionic-native/background-mode';
+import { Platform } from 'ionic-angular';
+import { Observable } from 'rxjs';
 /**
  * Generated class for the RoomStatusPage page.
  *
@@ -25,6 +28,7 @@ export class RoomStatusPage {
     selectedDate:Date;
 
     isToday:boolean;
+    elapsedCount:number = 0;
     calendar = {
         mode: 'month',
         currentDate: new Date(),
@@ -57,12 +61,12 @@ export class RoomStatusPage {
     };
 
 
-    constructor(public navCtrl: NavController, public toastCtrl: ToastController, public navParams: NavParams, public bookingDataProvider: BookingDataProvider) {
-        
-        this.subscription = this.bookingDataProvider.getSubject().subscribe(message => { 
+    constructor(public navCtrl: NavController, public toastCtrl: ToastController, public navParams: NavParams, public bookingDataProvider: BookingDataProvider,public backgroundMode: BackgroundMode, public platform:Platform) {
+
+        this.subscription = this.bookingDataProvider.getSubject().subscribe(message => {
             if(message) {
                 console.log('from observable ' + JSON.stringify(message));
-                if(message.operation=='UPDATE') {  
+                if(message.operation=='UPDATE') {
                     this.eventSource = this.eventSource.map(value => {
                         if(value.id === message.id) {
                             return message;
@@ -81,11 +85,19 @@ export class RoomStatusPage {
                 } else {
                     this.eventSource.push(message);
                 }
-                
+
                 this.myCalendar.loadEvents();
             }
         });
 
+        // platform.ready().then(() => {
+        //   if (this.platform.is('cordova')) {
+        //     this.backgroundMode.on('enable').subscribe(()=>{
+        //     });
+        //   } else {
+        //     // Cordova not accessible, add mock data if necessary
+        //   }
+        // });
     }
 
     onViewTitleChanged(title) {
@@ -133,27 +145,34 @@ export class RoomStatusPage {
     this.bookingDataProvider.loadEvent();
 
     // setInterval(() => {
-    //   this.eventSource.forEach(value => {
-    //     let eventStartTime = Moment(value.startTime);
-    //     let eventMaxStartTime = eventStartTime.clone().add(10,'minutes');
-    //     let now = Moment();
-    //     if(now.isSameOrAfter(eventMaxStartTime)) {
-    //         console.log('EXPIRED' + eventStartTime.toString()+' '+eventMaxStartTime.toString());
-    //         this.bookingDataProvider.getSubject().next({
-    //             id: value.id,
-    //             operation: 'DELETE'
-    //         });
-    //         this.presentToast(value);
+    //   Observable.from(this.eventSource).subscribe(value => {
+    //       let eventStartTime = Moment(value.startTime);
+    //       let eventMaxStartTime = eventStartTime.clone().add(10,'minutes');
+    //       let now = Moment();
+
+    //       if(now.isSameOrAfter(eventMaxStartTime) && value.checkin!=true) {
+    //           console.log('EXPIRED' + eventStartTime.toString()+' '+eventMaxStartTime.toString());
+    //           this.bookingDataProvider.delete(value.id).then(value1 => {
+    //               this.presentToast(value1);
+    //           });
+
+    //       }
+    //   });
+    // },10000);
+
+    // setInterval(() => {
+
     //     }
-        
+
     //     //this.presentToast(null);
     //   });
-    // }, 10000); 
+    // }, 10000);
   }
 
    presentToast(booking:Booking) {
+    let bookDate = Moment(booking.bookDate).format("DD MMMM YYYY");
     let toast = this.toastCtrl.create({
-      message: `Booking ${booking.room} - ${booking.fullName} on ${booking.bookDate} - ${booking.bookStartTime} was deleted successfully`,
+      message: `Booking ${booking.room} - ${booking.fullName} on ${bookDate} ${booking.bookStartTime} was deleted due to miss check-in`,
       showCloseButton: true
     });
     toast.present();

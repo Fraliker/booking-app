@@ -43,7 +43,9 @@ export class BookingDataProvider {
       }
     });
   }
-  delete(id): Promise<Booking[]> {
+
+
+  delete(id): Promise<Booking> {
     return this.storage.get('bookings').then((data: Booking[]) => {
       let bookingArray: Booking[] = [];
 
@@ -52,23 +54,25 @@ export class BookingDataProvider {
       if (data != null) {
         bookingArray = data;
       }
-
+      let deletedBooking;
       bookingArray = bookingArray.filter( value => {
         if(value.id === idField.id) {
-            console.log('deleted');
+            deletedBooking = value;
             return false;
         } else {
           return true;
         }
       });
-      
+      console.log('DELX '+JSON.stringify(bookingArray));
+
       this.storage.set('bookings', bookingArray);
 
       let operationField = { operation : 'DELETE'};
       this.subject.next( { ...idField, ...operationField});
-      return Promise.resolve(bookingArray);
+      return Promise.resolve(deletedBooking);
     });
   }
+
   checkIn(id): Promise<Booking[]> {
     return this.storage.get('bookings').then((data: Booking[]) => {
       let bookingArray: Booking[] = [];
@@ -89,7 +93,7 @@ export class BookingDataProvider {
           return value;
         }
       });
-      
+
       this.storage.set('bookings', bookingArray);
 
       let operationField = { operation : 'UPDATE' };
@@ -97,6 +101,7 @@ export class BookingDataProvider {
       return Promise.resolve(bookingArray);
     });
   }
+
   save(newData): Promise<Booking[]> {
 
     let isUpdate = false;
@@ -138,11 +143,11 @@ export class BookingDataProvider {
             return value;
           }
         });
-      } 
+      }
       else {
         bookingArray.push(newDataWithId);
       }
-      
+
       this.storage.set('bookings', bookingArray);
 
       let operationField = { operation : isUpdate?'UPDATE':'NEW'};

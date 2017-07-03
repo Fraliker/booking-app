@@ -15,10 +15,10 @@
         <button ion-button medium (click)="changeMode('month')">Month</button>
         <button ion-button medium (click)="changeMode('week')">Week</button>
         <button ion-button medium (click)="changeMode('day')">Day</button>
-        
+
     </ion-buttons>
     <ion-buttons end>
-      {{selectedDate|date: 'dd MMM yyyy'}}
+      {{elapsedCount}} - {{selectedDate|date: 'dd MMM yyyy'}}
     </ion-buttons>
   </ion-toolbar>
 </ion-header>
@@ -37,9 +37,9 @@
             }
         </style>
         <div class="calendar-event-inner" [style.background-color]="getStyle(displayEvent.event)" >
-          {{displayEvent.event.title}} 
+          {{displayEvent.event.title}}
         </div>
-    </template> 
+    </template>
 
     <template #templateWeek let-displayEvent="displayEvent">
       <style>
@@ -71,13 +71,13 @@
                     <ion-badge [style.background-color]="getStyle(event)">{{event.room}}</ion-badge>
                 <span *ngIf="event.allDay" class="monthview-eventdetail-timecolumn">{{allDayLabel}}</span>
                 <ion-icon name="log-in" *ngIf="event.checkin" label="checkin" >&nbsp;</ion-icon>
-                <span class="event-detail">  {{event.fullName}} 
-                    
+                <span class="event-detail">  {{event.fullName}}
+
                 </span>
-                
+
             </ion-item>
             <ion-item *ngIf="selectedDate?.events.length==0">
-                <div class="no-events-label"> 
+                <div class="no-events-label">
                    <ion-badge color="danger">
                   {{noEventsLabel}}
                    </ion-badge>

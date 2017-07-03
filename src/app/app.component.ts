@@ -20,19 +20,4 @@ export class MyApp {
       // this.createTable();
     });
   }
-
-  // createTable() {
-  //   this.sqlite.create({
-  //     name: 'booking.db',
-  //     location: 'default'
-  //   })
-  //     .then((db: SQLiteObject) => {
-
-  //       db.executeSql('create table book(name VARCHAR(32))', {})
-  //         .then(() => console.log('Executed SQL'))
-  //         .catch(e => console.log(e));
-
-  //     })
-  //     .catch(e => console.log(e));
-  // }
 }
