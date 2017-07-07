@@ -7,26 +7,28 @@
 <ion-header>
 
   <ion-navbar color="primary">
-    <ion-title> <ion-icon name="calendar"></ion-icon>&nbsp;BNYM SG IC - Booking Calendar</ion-title>
+    <ion-title> <ion-icon name="calendar"></ion-icon>&nbsp;BNYM SG IC - Room Booking Calendar</ion-title>
   </ion-navbar>
   <ion-toolbar color="secondary">
     <ion-buttons>
-        <button ion-button medium [disabled]="isToday" (click)="today()">Today</button>
-        <button ion-button medium (click)="changeMode('month')">Month</button>
-        <button ion-button medium (click)="changeMode('week')">Week</button>
-        <button ion-button medium (click)="changeMode('day')">Day</button>
+        <button ion-button medium solid round color="primary" [disabled]="isToday" (click)="today()">Today</button>
+        <button ion-button medium solid round color="primary" (click)="changeMode('month')">Month</button>
+        <button ion-button medium solid round color="primary" (click)="changeMode('week')">Week</button>
+        <button ion-button medium solid round color="primary" (click)="changeMode('day')">Day</button>
 
     </ion-buttons>
     <ion-buttons end>
-      {{selectedDate|date: 'dd MMM yyyy'}}
+        <ion-badge color="danger">
+          Selected Date : {{selectedDate|date: 'dd MMM yyyy'}}
+        </ion-badge>
     </ion-buttons>
   </ion-toolbar>
 </ion-header>
 
 
 <ion-content padding>
-  <ion-fab top right edge>
-    <button ion-fab mini (click)="goToRoomBooking()"><ion-icon name="add"></ion-icon></button>
+  <ion-fab top right>
+    <button ion-fab (click)="goToRoomBooking()"><ion-icon name="add"></ion-icon></button>
   </ion-fab>
     <template #templateDay let-displayEvent="displayEvent">
         <style>
