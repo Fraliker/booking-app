@@ -33,7 +33,7 @@
      align-items: center;
      background-color: #1abc9c;
 }
- 
+
 .icon-row {
      -webkit-align-items: center;
      align-items: center;
@@ -42,3 +42,7 @@
 .text-center {
     text-align: center;
 }
+
+$popover-md-width: 480px;
+$popover-ios-width: 480px;
+$popover-wp-width: 480px;

@@ -8,6 +8,11 @@
 
   <ion-navbar color="primary">
     <ion-title> <ion-icon name="calendar"></ion-icon>&nbsp;BNYM SG IC - Room Booking Calendar</ion-title>
+     <ion-buttons end>
+      <button ion-button icon-only  (click)="openHelp()">
+        <ion-icon name="help"></ion-icon>&nbsp;&nbsp;&nbsp;
+      </button>
+    </ion-buttons>
   </ion-navbar>
   <ion-toolbar color="secondary">
     <ion-buttons>
@@ -106,6 +111,6 @@
 </ion-content>
 <ion-footer>
   <ion-toolbar>
-    <ion-title>Uptime : {{elapsedCount}}s </ion-title>
+     <ion-label>Uptime : {{elapsedCount}}</ion-label>
   </ion-toolbar>
 </ion-footer>

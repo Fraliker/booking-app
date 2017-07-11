@@ -5,7 +5,7 @@ import { MyApp } from './app.component';
 
 import { AboutPage } from '../pages/about/about';
 import { ContactPage } from '../pages/contact/contact';
-import { HomePage } from '../pages/home/home';
+import { HelpPage } from '../pages/help/help';
 
 import { StatusBar } from '@ionic-native/status-bar';
 import { SplashScreen } from '@ionic-native/splash-screen';
@@ -16,12 +16,14 @@ import { SQLite } from '@ionic-native/sqlite';
 import { IonicStorageModule, Storage } from '@ionic/storage';
 import { HttpModule }    from '@angular/http';
 import { BookingDataProvider } from '../providers/booking-data/booking-data';
+import { Insomnia } from '@ionic-native/insomnia';
+
 @NgModule({
   declarations: [
     MyApp,
     AboutPage,
     ContactPage,
-    HomePage
+    HelpPage
   ],
   imports: [
     BrowserModule,
@@ -37,11 +39,12 @@ import { BookingDataProvider } from '../providers/booking-data/booking-data';
     MyApp,
     AboutPage,
     ContactPage,
-    HomePage
+    HelpPage
   ],
   providers: [
     StatusBar,
     SplashScreen,
+    Insomnia,
     {provide: ErrorHandler, useClass: IonicErrorHandler}
   ]
 })

@@ -7,6 +7,8 @@ import { CalendarComponent } from "ionic2-calendar/calendar";
 import * as Moment from "moment";
 import { Platform } from 'ionic-angular';
 import { Observable } from 'rxjs';
+import { PopoverController } from 'ionic-angular';
+import { HelpPage } from '../help/help';
 /**
  * Generated class for the RoomStatusPage page.
  *
@@ -25,9 +27,10 @@ export class RoomStatusPage {
     eventSource = [];
     viewTitle;
     selectedDate:Date;
+    startDate:Moment.Moment;
 
     isToday:boolean;
-    elapsedCount:number = 0;
+    elapsedCount:string;
     calendar = {
         mode: 'month',
         currentDate: new Date(),
@@ -60,7 +63,7 @@ export class RoomStatusPage {
     };
 
 
-    constructor(public navCtrl: NavController, public toastCtrl: ToastController, public navParams: NavParams, public bookingDataProvider: BookingDataProvider, public platform:Platform) {
+    constructor(public navCtrl: NavController, public toastCtrl: ToastController, public navParams: NavParams, public bookingDataProvider: BookingDataProvider, public platform:Platform,public popoverCtrl: PopoverController) {
 
         this.subscription = this.bookingDataProvider.getSubject().subscribe(message => {
             if(message) {
@@ -88,7 +91,7 @@ export class RoomStatusPage {
                 this.myCalendar.loadEvents();
             }
         });
-
+        this.startDate = Moment();
         // platform.ready().then(() => {
         //   if (this.platform.is('cordova')) {
         //     this.backgroundMode.on('enable').subscribe(()=>{
@@ -143,9 +146,11 @@ export class RoomStatusPage {
   ionViewDidLoad() {
     this.bookingDataProvider.loadEvent();
     var that = this;
+
     setInterval(() => {
-        that.elapsedCount++;
+      this.elapsedCount = this.startDate.from(Moment());
     },1000);
+
     setInterval(() => {
 
       var p = Promise.resolve(1);
@@ -196,7 +201,7 @@ export class RoomStatusPage {
    goToRoomBooking() {
      this.navCtrl.push(RoomBookingPage, {
          bookDate: this.selectedDate.toISOString(),
-         room: 'Room 7A',
+         room: 'Room 7B',
          bookStartTime: '09:00',
          bookEndTime: '10:00'
      });
@@ -204,15 +209,24 @@ export class RoomStatusPage {
 
    getStyle(booking:Booking) {
        let color;
-       if(booking.room==='Room 7A') {
+       if(booking.room==='Room 7B') {
            color = '#3399EE';
-       } else if(booking.room==='Room 7B') {
-           color = '#ff66aa';
        } else if(booking.room==='Room 7C') {
+           color = '#ff66aa';
+       } else if(booking.room==='Room 7D') {
            color = '#ee9900';
-       } else {
+       } else if(booking.room==='Town Hall') {
            color = '#00eecc';
        }
+       else {
+           color = '#332266';
+       }
        return color;
+   }
+
+   openHelp() {
+
+    let popover = this.popoverCtrl.create(HelpPage, {}, {cssClass: 'contact-popover'});
+    popover.present();
    }
 }

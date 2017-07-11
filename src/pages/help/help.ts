@@ -5,35 +5,35 @@ import { RoomStatusPage } from '../room-status/room-status';
 import { Storage } from '@ionic/storage';
 
 @Component({
-  selector: 'page-home',
-  templateUrl: 'home.html'
+  selector: 'page-help',
+  templateUrl: 'help.html'
 })
-export class HomePage {
+export class HelpPage {
 
   constructor(public navCtrl: NavController, public storage:Storage) {
-    
+
   }
 
    ionViewDidLoad() {
 
     // this.storage.ready().then(() => {
     //   this.storage.get("booking").then((val) => {
-        
+
     //     val.forEach(element => {
-    //       console.log("val "+JSON.stringify(element));  
+    //       console.log("val "+JSON.stringify(element));
     //     });
     //    });
     // });
-     
-      
+
+
    }
 
    goToRoomBooking() {
-     
+
      this.navCtrl.push(RoomBookingPage);
    }
    goToRoomStatus() {
-     
+
      this.navCtrl.push(RoomStatusPage);
    }
 
