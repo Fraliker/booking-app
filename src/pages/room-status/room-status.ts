@@ -145,7 +145,7 @@ export class RoomStatusPage {
     var that = this;
     setInterval(() => {
         that.elapsedCount++;
-    },1000); 
+    },1000);
     setInterval(() => {
 
       var p = Promise.resolve(1);
@@ -183,7 +183,7 @@ export class RoomStatusPage {
    presentToast(booking:Booking) {
     let bookDate = Moment(booking.bookDate).format("DD MMMM YYYY");
     let toast = this.toastCtrl.create({
-      message: `Booking ${booking.room} - ${booking.fullName} on ${bookDate} ${booking.bookStartTime} was deleted due to miss check-in`,
+      message: `Booking ${booking.room} - ${booking.fullName} on ${bookDate} ${booking.bookStartTime} is deleted due to miss check-in`,
       showCloseButton: true
     });
     toast.present();
