@@ -7,7 +7,7 @@ import { CalendarComponent } from "ionic2-calendar/calendar";
 import * as Moment from "moment";
 import { Platform } from 'ionic-angular';
 import { Observable } from 'rxjs';
-import { PopoverController } from 'ionic-angular';
+import { ModalController } from 'ionic-angular';
 import { HelpPage } from '../help/help';
 /**
  * Generated class for the RoomStatusPage page.
@@ -63,7 +63,7 @@ export class RoomStatusPage {
     };
 
 
-    constructor(public navCtrl: NavController, public toastCtrl: ToastController, public navParams: NavParams, public bookingDataProvider: BookingDataProvider, public platform:Platform,public popoverCtrl: PopoverController) {
+    constructor(public navCtrl: NavController, public toastCtrl: ToastController, public navParams: NavParams, public bookingDataProvider: BookingDataProvider, public platform:Platform,public modalCtrl: ModalController) {
 
         this.subscription = this.bookingDataProvider.getSubject().subscribe(message => {
             if(message) {
@@ -226,7 +226,7 @@ export class RoomStatusPage {
 
    openHelp() {
 
-    let popover = this.popoverCtrl.create(HelpPage, {}, {cssClass: 'contact-popover'});
-    popover.present();
+    let profileModal = this.modalCtrl.create(HelpPage, { });
+    profileModal.present();
    }
 }
