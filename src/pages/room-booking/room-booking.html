@@ -35,11 +35,13 @@
   </ion-item>
   <ion-item>
     <ion-label>Start Time</ion-label>
-    <ion-datetime displayFormat="hh:mm A" pickerFormat="hh mm A" formControlName="bookStartTime" (ionChange)="adjustEndTime($event)"></ion-datetime>
+    <ion-input type="text" #bookStartTime formControlName="bookStartTime" required (click)="showStartTimeDialog($event)"></ion-input>
+    <!--<ion-datetime displayFormat="hh:mm A" #bookStartTime pickerFormat="hh mm A" formControlName="bookStartTime"></ion-datetime>-->
   </ion-item>
   <ion-item>
     <ion-label>End Time</ion-label>
-    <ion-datetime displayFormat="hh:mm A" pickerFormat="hh mm A" formControlName="bookEndTime"></ion-datetime>
+    <!--<ion-datetime displayFormat="hh:mm A" pickerFormat="hh mm A" formControlName="bookEndTime"></ion-datetime>-->
+    <ion-input type="text" #bookEndTime formControlName="bookEndTime" required (click)="showEndTimeDialog($event)"></ion-input>
   </ion-item>
   <button ion-button color="secondary" type="button" *ngIf="enableCheckin" block (click)="checkIn()">Check in</button>
   <button ion-button type="submit" [disabled]="!bookingForm.valid" block>Submit</button>

@@ -9,6 +9,8 @@ import { Platform } from 'ionic-angular';
 import { Observable } from 'rxjs';
 import { ModalController } from 'ionic-angular';
 import { HelpPage } from '../help/help';
+
+declare var mdDateTimePicker:any;
 /**
  * Generated class for the RoomStatusPage page.
  *
@@ -100,6 +102,7 @@ export class RoomStatusPage {
         //     // Cordova not accessible, add mock data if necessary
         //   }
         // });
+
     }
 
     onViewTitleChanged(title) {

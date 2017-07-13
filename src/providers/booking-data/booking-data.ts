@@ -59,7 +59,7 @@ export class BookingDataProvider {
       if (data != null) {
         bookingArray = data;
       }
-      
+
       bookingArray = bookingArray.filter( value => {
         if(value.id === idField.id) {
             deletedBooking = value;
@@ -72,12 +72,12 @@ export class BookingDataProvider {
       //console.log('delete '+JSON.stringify(bookingArray));
       let operationField = { operation : 'DELETE'};
       this.subject.next( { ...idField, ...operationField});
-      
+
       return bookingArray;
     }).then( bookingArray => {
       return that.storage.set('bookings', bookingArray);
     }).then( () => {
-      console.log('end');  
+      console.log('end');
       return deletedBooking;
     });
 
@@ -116,7 +116,6 @@ export class BookingDataProvider {
 
     let isUpdate = false;
     if(newData.id) {
-      console.log('update '+newData.id);
       isUpdate = true;
     }
     let idField = { id: newData.id || new Date().getTime() };

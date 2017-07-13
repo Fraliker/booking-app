@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, ViewChild, ElementRef, Renderer } from '@angular/core';
 import { IonicPage, NavController, NavParams } from 'ionic-angular';
 import { Validators, FormBuilder, FormGroup } from '@angular/forms';
 import { BookingDataProvider } from '../../providers/booking-data/booking-data';
@@ -11,6 +11,9 @@ import * as Moment from "moment";
  * See http://ionicframework.com/docs/components/#navigation for more info
  * on Ionic pages and navigation.
  */
+
+declare var mdDateTimePicker:any;
+
 @IonicPage()
 @Component({
   selector: 'page-room-booking',
@@ -18,17 +21,49 @@ import * as Moment from "moment";
 })
 export class RoomBookingPage {
 
+  @ViewChild("bookStartTime", {read: ElementRef}) bookStartTime:ElementRef;
+  @ViewChild("bookEndTime", {read: ElementRef}) bookEndTime:ElementRef;
+
   eventSource;
   viewTitle;
   enableDelete = false;
   enableCheckin = false;
   bookingForm: FormGroup;
   idValue;
+  startTimeDialog;
+  endTimeDialog;
 
-  constructor(public navCtrl: NavController, public navParams: NavParams, private formBuilder: FormBuilder, private storage: Storage, public bookingDataProvider: BookingDataProvider, public alertCtrl: AlertController) {
-    this.initForm(navParams.data);
+  constructor(public navCtrl: NavController, public navParams: NavParams, private formBuilder: FormBuilder,
+   private storage: Storage, public bookingDataProvider: BookingDataProvider, public alertCtrl: AlertController,
+   private renderer: Renderer) {
+    this.initForm(this.navParams.data);
   }
 
+  ionViewDidLoad() {
+
+    console.log(this.bookStartTime.nativeElement);
+
+    const that = this;
+    this.renderer.listen(this.bookStartTime.nativeElement,'onOk', function(val) {
+        //console.log('onok' + that.startTimeDialog.time);
+        that.bookingForm.controls['bookStartTime'].setValue(that.startTimeDialog.time.format('HH:mm'));
+    });
+
+    this.renderer.listen(this.bookEndTime.nativeElement,'onOk', function(val) {
+        that.bookingForm.controls['bookEndTime'].setValue(that.endTimeDialog.time.format('HH:mm'));
+    });
+
+    this.startTimeDialog = new mdDateTimePicker.default({
+          type: 'time',
+          trigger: this.bookStartTime.nativeElement
+    });
+
+    this.endTimeDialog = new mdDateTimePicker.default({
+          type: 'time',
+          trigger: this.bookEndTime.nativeElement
+    });
+
+  }
 
   initForm(initialValue) {
     if(initialValue.id) {
@@ -37,7 +72,7 @@ export class RoomBookingPage {
 
       let eventStartTime = Moment(initialValue.startTime);
       let eventMaxStartTime = eventStartTime.clone().add(10,'minutes');
-      let eventMinStartTime = eventStartTime.clone().subtract(30,'minutes');
+      let eventMinStartTime = eventStartTime.clone().subtract(15,'minutes');
       let now = Moment();
       if(now.isBetween(eventMinStartTime,eventMaxStartTime)) {
           this.enableCheckin = true;
@@ -53,7 +88,9 @@ export class RoomBookingPage {
   }
 
   submitForm() {
+
     let bookingFormValue = { ...this.bookingForm.value, ...this.idValue };
+    console.log(bookingFormValue);
     this.bookingDataProvider.save(bookingFormValue).then(data => {
       //this.initForm();
       this.showAlert('Successfully booked the room');
@@ -93,6 +130,28 @@ export class RoomBookingPage {
       buttons: ['OK']
     });
     alert.present();
+  }
+
+  showStartTimeDialog(event) {
+    const val:string = event.target.value;
+    if(!val) return;
+    const splitVal = val.split(':');
+    const selectedTime = Moment();
+    selectedTime.set('hour',+splitVal[0]);
+    selectedTime.set('minute',+splitVal[1]);
+    this.startTimeDialog.time = selectedTime;
+    this.startTimeDialog.toggle();
+  }
+
+  showEndTimeDialog(event) {
+    const val:string = event.target.value;
+    if(!val) return;
+    const splitVal = val.split(':');
+    const selectedTime = Moment();
+    selectedTime.set('hour',+splitVal[0]);
+    selectedTime.set('minute',+splitVal[1]);
+    this.endTimeDialog.time = selectedTime;
+    this.endTimeDialog.toggle();
   }
 
 }
