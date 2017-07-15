@@ -12,7 +12,7 @@ import * as Moment from "moment";
  * on Ionic pages and navigation.
  */
 
-declare var mdDateTimePicker:any;
+declare var $:any;
 
 @IonicPage()
 @Component({
@@ -44,24 +44,46 @@ export class RoomBookingPage {
     console.log(this.bookStartTime.nativeElement);
 
     const that = this;
-    this.renderer.listen(this.bookStartTime.nativeElement,'onOk', function(val) {
-        //console.log('onok' + that.startTimeDialog.time);
-        that.bookingForm.controls['bookStartTime'].setValue(that.startTimeDialog.time.format('HH:mm'));
-    });
 
-    this.renderer.listen(this.bookEndTime.nativeElement,'onOk', function(val) {
-        that.bookingForm.controls['bookEndTime'].setValue(that.endTimeDialog.time.format('HH:mm'));
-    });
+    $(this.bookStartTime.nativeElement).clockpicker({
+      autoclose: true,
+      placement: 'right', 
+      afterDone: function(val) {
+          that.bookingForm.controls['bookStartTime'].setValue(val);
+          const splitVal = val.split(':');
+          const selectedTime = Moment();
+          selectedTime.set('hour',+splitVal[0]);
+          selectedTime.set('minute',+splitVal[1]);
+          selectedTime.add(1,'hour');
+          that.bookingForm.controls['bookEndTime'].setValue(selectedTime.format('HH:mm'));
+      }
+    }); 
 
-    this.startTimeDialog = new mdDateTimePicker.default({
-          type: 'time',
-          trigger: this.bookStartTime.nativeElement
-    });
+    $(this.bookEndTime.nativeElement).clockpicker({
+      autoclose: true,
+      placement: 'right', 
+      afterDone: function(val) {
+          that.bookingForm.controls['bookEndTime'].setValue(val);
+      }
+    }); 
+    // this.renderer.listen(this.bookStartTime.nativeElement,'onOk', function(val) {
+    //     //console.log('onok' + that.startTimeDialog.time);
+    //     that.bookingForm.controls['bookStartTime'].setValue(that.startTimeDialog.time.format('HH:mm'));
+    // });
 
-    this.endTimeDialog = new mdDateTimePicker.default({
-          type: 'time',
-          trigger: this.bookEndTime.nativeElement
-    });
+    // this.renderer.listen(this.bookEndTime.nativeElement,'onOk', function(val) {
+    //     that.bookingForm.controls['bookEndTime'].setValue(that.endTimeDialog.time.format('HH:mm'));
+    // });
+
+    // this.startTimeDialog = new mdDateTimePicker.default({
+    //       type: 'time',
+    //       trigger: this.bookStartTime.nativeElement
+    // });
+
+    // this.endTimeDialog = new mdDateTimePicker.default({
+    //       type: 'time',
+    //       trigger: this.bookEndTime.nativeElement
+    // });
 
   }
 
@@ -133,25 +155,25 @@ export class RoomBookingPage {
   }
 
   showStartTimeDialog(event) {
-    const val:string = event.target.value;
-    if(!val) return;
-    const splitVal = val.split(':');
-    const selectedTime = Moment();
-    selectedTime.set('hour',+splitVal[0]);
-    selectedTime.set('minute',+splitVal[1]);
-    this.startTimeDialog.time = selectedTime;
-    this.startTimeDialog.toggle();
+    // const val:string = event.target.value;
+    // if(!val) return;
+    // const splitVal = val.split(':');
+    // const selectedTime = Moment();
+    // selectedTime.set('hour',+splitVal[0]);
+    // selectedTime.set('minute',+splitVal[1]);
+    // this.startTimeDialog.time = selectedTime;
+    // this.startTimeDialog.toggle();
   }
 
-  showEndTimeDialog(event) {
-    const val:string = event.target.value;
-    if(!val) return;
-    const splitVal = val.split(':');
-    const selectedTime = Moment();
-    selectedTime.set('hour',+splitVal[0]);
-    selectedTime.set('minute',+splitVal[1]);
-    this.endTimeDialog.time = selectedTime;
-    this.endTimeDialog.toggle();
-  }
+  // showEndTimeDialog(event) {
+  //   const val:string = event.target.value;
+  //   if(!val) return;
+  //   const splitVal = val.split(':');
+  //   const selectedTime = Moment();
+  //   selectedTime.set('hour',+splitVal[0]);
+  //   selectedTime.set('minute',+splitVal[1]);
+  //   this.endTimeDialog.time = selectedTime;
+  //   this.endTimeDialog.toggle();
+  // }
 
 }
