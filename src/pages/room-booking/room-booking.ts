@@ -66,6 +66,7 @@ export class RoomBookingPage {
           that.bookingForm.controls['bookEndTime'].setValue(val);
       }
     }); 
+    
     // this.renderer.listen(this.bookStartTime.nativeElement,'onOk', function(val) {
     //     //console.log('onok' + that.startTimeDialog.time);
     //     that.bookingForm.controls['bookStartTime'].setValue(that.startTimeDialog.time.format('HH:mm'));

@@ -152,7 +152,7 @@ export class RoomStatusPage {
 
     setInterval(() => {
       this.elapsedCount = this.startDate.from(Moment());
-    },1000);
+    }, 60000);
 
     setInterval(() => {
 

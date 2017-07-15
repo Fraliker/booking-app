@@ -4,6 +4,7 @@ import { Http } from '@angular/http';
 import { Storage } from '@ionic/storage';
 import { Observable } from 'rxjs';
 import { Subject } from 'rxjs/Subject';
+import * as Moment from "moment";
 /*
   Generated class for the BookingDataProvider provider.
 
@@ -120,7 +121,9 @@ export class BookingDataProvider {
     }
     let idField = { id: newData.id || new Date().getTime() };
 
+    let now = Moment();
     let startTime = new Date(newData.bookDate);
+    
     startTime.setHours(newData.bookStartTime.split(":")[0]);
     startTime.setMinutes(newData.bookStartTime.split(":")[1]);
     startTime.setMilliseconds(0);
@@ -133,6 +136,12 @@ export class BookingDataProvider {
     let endTimeField = { endTime };
 
     let checkin = false;
+    
+    console.log(Moment(startTime));
+    if(Moment(startTime).isBefore(now)) {
+      checkin = true;
+    }
+
     let checkinField = { checkin };
 
     let newDataWithId: Booking = { ...newData, ...idField, ...startTimeField, ...endTimeField, ...checkinField };
