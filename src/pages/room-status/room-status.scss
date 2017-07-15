@@ -1,3 +1,5 @@
+@import "../../theme/variables";
+
 page-room-status {
   ion-modal {
   position: absolute;
@@ -7,5 +9,17 @@ page-room-status {
   width: 70%;
   height: 62%;
   }
+
+
+  .monthview-selected {     
+    background-color: white !important;
+    color: rgba(0, 140, 149, 1.0) !important;
+    font-weight: bold;
+  }
+
+  .monthview-primary-with-event {
+    background-color: rgba(0, 140, 149, 0.3) !important;
+  }
+
 }
 

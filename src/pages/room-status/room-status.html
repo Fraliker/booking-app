@@ -7,7 +7,8 @@
 <ion-header>
 
   <ion-navbar color="primary">
-    <ion-title> <ion-icon name="calendar"></ion-icon>&nbsp;BNYM SG IC - Room Booking Calendar</ion-title>
+    <ion-title> 
+    BNYM SG IC - Room Booking Calendar</ion-title>
      <ion-buttons end>
       <button ion-button icon-only  (click)="openHelp()">
         <ion-icon name="help"></ion-icon>&nbsp;&nbsp;&nbsp;
@@ -23,7 +24,7 @@
 
     </ion-buttons>
     <ion-buttons end>
-        <ion-badge color="danger">
+        <ion-badge color="secondary2">
           Selected Date : {{selectedDate|date: 'dd MMM yyyy'}}
         </ion-badge>
     </ion-buttons>
@@ -85,7 +86,7 @@
             </ion-item>
             <ion-item *ngIf="selectedDate?.events.length==0">
                 <div class="no-events-label">
-                   <ion-badge color="danger">
+                   <ion-badge color="primary">
                   {{noEventsLabel}}
                    </ion-badge>
                   </div>
@@ -111,6 +112,9 @@
 </ion-content>
 <ion-footer>
   <ion-toolbar>
-     <ion-label>Uptime : {{elapsedCount}}</ion-label>
+     <ion-label>&nbsp;&nbsp;Uptime : {{elapsedCount }}</ion-label>
+          <ion-buttons end>
+     <img src="assets/img/logo.png" width="60"/>
+          </ion-buttons>
   </ion-toolbar>
 </ion-footer>

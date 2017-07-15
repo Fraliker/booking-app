@@ -393,7 +393,6 @@
 		popover.show();
 
 		// Place the popover
-		console.log(offset);
 		switch (placement) {
 			case 'bottom':
 				styles.top = offset.top + height;

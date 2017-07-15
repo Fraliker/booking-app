@@ -1,5 +1,5 @@
 import { Component, ViewChild, ElementRef, Renderer } from '@angular/core';
-import { IonicPage, NavController, NavParams } from 'ionic-angular';
+import { IonicPage, NavController, NavParams, LoadingController } from 'ionic-angular';
 import { Validators, FormBuilder, FormGroup } from '@angular/forms';
 import { BookingDataProvider } from '../../providers/booking-data/booking-data';
 import { Storage } from '@ionic/storage';
@@ -35,19 +35,28 @@ export class RoomBookingPage {
 
   constructor(public navCtrl: NavController, public navParams: NavParams, private formBuilder: FormBuilder,
    private storage: Storage, public bookingDataProvider: BookingDataProvider, public alertCtrl: AlertController,
-   private renderer: Renderer) {
+   private renderer: Renderer,public loadingCtrl: LoadingController) {
     this.initForm(this.navParams.data);
   }
 
   ionViewDidLoad() {
 
-    console.log(this.bookStartTime.nativeElement);
-
     const that = this;
+    let loading;
 
     $(this.bookStartTime.nativeElement).clockpicker({
-      autoclose: true,
-      placement: 'right', 
+      autoclose: false,
+      placement: 'right',
+      donetext: 'Done',
+      beforeShow: function(){
+        loading = that.loadingCtrl.create({
+             content: ''
+         });
+        loading.present();
+      },
+      beforeHide: function(){
+        loading.dismiss();
+      }, 
       afterDone: function(val) {
           that.bookingForm.controls['bookStartTime'].setValue(val);
           const splitVal = val.split(':');
@@ -58,10 +67,19 @@ export class RoomBookingPage {
           that.bookingForm.controls['bookEndTime'].setValue(selectedTime.format('HH:mm'));
       }
     }); 
-
     $(this.bookEndTime.nativeElement).clockpicker({
-      autoclose: true,
-      placement: 'right', 
+      autoclose: false,
+      placement: 'right',
+      donetext: 'Done',
+      beforeShow: function(){
+       loading = that.loadingCtrl.create({
+             content: ''
+         });
+       loading.present();
+      },
+      beforeHide: function(){
+        loading.dismiss();
+      },
       afterDone: function(val) {
           that.bookingForm.controls['bookEndTime'].setValue(val);
       }

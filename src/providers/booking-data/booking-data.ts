@@ -137,7 +137,6 @@ export class BookingDataProvider {
 
     let checkin = false;
     
-    console.log(Moment(startTime));
     if(Moment(startTime).isBefore(now)) {
       checkin = true;
     }

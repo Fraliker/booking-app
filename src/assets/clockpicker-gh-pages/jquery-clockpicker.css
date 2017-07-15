@@ -18,11 +18,9 @@ and (max-device-width : 1024px){
     -ms-transform: scale(1.5);
     -webkit-transform: scale(1.5); 
     transform: scale(1.5);
-  }
+  } 
 }
 .popover {
-
-
   position: absolute !important;
   left: 35% !important;
   top: 25% !important;
@@ -66,6 +64,7 @@ and (max-device-width : 1024px){
   border-radius: 5px 5px 0 0;
 }
 .popover-content {
+  position: static !important;
   padding: 9px 14px;
 }
 .popover > .arrow,

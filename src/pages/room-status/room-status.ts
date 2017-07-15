@@ -32,7 +32,7 @@ export class RoomStatusPage {
     startDate:Moment.Moment;
 
     isToday:boolean;
-    elapsedCount:string;
+    elapsedCount:string = 'a few moments ago';
     calendar = {
         mode: 'month',
         currentDate: new Date(),
@@ -110,7 +110,7 @@ export class RoomStatusPage {
     }
 
     onEventSelected(event) {
-        console.log('Event selected:' + event.startTime + '-' + event.endTime + ',' + event.title, +', '+ event.id);
+        //console.log('Event selected:' + event.startTime + '-' + event.endTime + ',' + event.title, +', '+ event.id);
         this.navCtrl.push(RoomBookingPage, event);
     }
 
@@ -123,8 +123,8 @@ export class RoomStatusPage {
     }
 
     onTimeSelected(ev) {
-        console.log('Selected time: ' + ev.selectedTime + ', hasEvents: ' +
-            (ev.events !== undefined && ev.events.length !== 0) + ', disabled: ' + ev.disabled);
+        // console.log('Selected time: ' + ev.selectedTime + ', hasEvents: ' +
+        //     (ev.events !== undefined && ev.events.length !== 0) + ', disabled: ' + ev.disabled);
     }
 
     onCurrentDateChanged(event:Date) {
@@ -155,6 +155,10 @@ export class RoomStatusPage {
     }, 60000);
 
     setInterval(() => {
+      this.today();
+    }, 60000*60*5);
+
+    setInterval(() => {
 
       var p = Promise.resolve(1);
 
@@ -164,7 +168,7 @@ export class RoomStatusPage {
             let eventMaxStartTime = eventStartTime.clone().add(10,'minutes');
             let now = Moment();
             if(now.isSameOrAfter(eventMaxStartTime) && value.checkin!=true) {
-                console.log('EXPIRED' + eventStartTime.toString()+' '+eventMaxStartTime.toString());
+                //console.log('EXPIRED' + eventStartTime.toString()+' '+eventMaxStartTime.toString());
                 return that.bookingDataProvider.delete(value.id).then(value1 => {
                   that.presentToast(value1);
                   return Promise.resolve(1);

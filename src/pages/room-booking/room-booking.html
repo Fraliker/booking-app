@@ -43,8 +43,8 @@
     <!--<ion-datetime displayFormat="hh:mm A" pickerFormat="hh mm A" formControlName="bookEndTime"></ion-datetime>-->
     <ion-input type="text" #bookEndTime formControlName="bookEndTime" required readonly="true"></ion-input>
   </ion-item>
-  <button ion-button color="secondary" type="button" *ngIf="enableCheckin" block (click)="checkIn()">Check in</button>
-  <button ion-button type="submit" [disabled]="!bookingForm.valid" block>Submit</button>
+  <button ion-button color="secondary2" type="button" *ngIf="enableCheckin" block (click)="checkIn()">Check in</button>
+  <button ion-button color="secondary" type="submit" [disabled]="!bookingForm.valid" block>Submit</button>
   <button ion-button color="danger" type="button" *ngIf="enableDelete" block (click)="delete()">Cancel</button>
 </form>
 </ion-list>
