@@ -136,6 +136,8 @@ export class RoomBookingPage {
       //this.initForm();
       this.showAlert('Successfully booked the room');
       this.navCtrl.pop();
+    }).catch(reason => {
+      this.showAlert(reason);
     });
   }
 

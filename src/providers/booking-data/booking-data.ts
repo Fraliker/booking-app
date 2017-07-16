@@ -152,9 +152,19 @@ export class BookingDataProvider {
       }
 
       if(isUpdate) {
+
+        const duplicateResult = bookingArray.filter(data => {
+            return newDataWithId.id !== data.id && newDataWithId.room === data.room && ( 
+              (Moment(newDataWithId.startTime).isSameOrAfter(Moment(data.startTime)) &&  Moment(newDataWithId.startTime).isBefore(Moment(data.endTime)))  ||
+              (Moment(newDataWithId.endTime).isAfter(Moment(data.startTime)) &&  Moment(newDataWithId.endTime).isSameOrBefore(Moment(data.endTime)))  
+            )
+        });
+        if(duplicateResult.length>0 ){
+          throw 'Duplicate room booking detected'; 
+        }
+
         bookingArray = bookingArray.map( value => {
           if(value.id === newDataWithId.id) {
-              console.log('updated');
               return newDataWithId;
           } else {
             return value;
@@ -162,6 +172,18 @@ export class BookingDataProvider {
         });
       }
       else {
+
+        const duplicateResult = bookingArray.filter(data => {
+            return newDataWithId.room === data.room && ( 
+              (Moment(newDataWithId.startTime).isSameOrAfter(Moment(data.startTime)) &&  Moment(newDataWithId.startTime).isBefore(Moment(data.endTime)))  ||
+              (Moment(newDataWithId.endTime).isAfter(Moment(data.startTime)) &&  Moment(newDataWithId.endTime).isSameOrBefore(Moment(data.endTime)))  
+            )
+        });
+
+        if(duplicateResult.length>0 ){
+          throw 'Duplicate room booking detected'; 
+        }
+        
         bookingArray.push(newDataWithId);
       }
 
