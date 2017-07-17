@@ -14,14 +14,14 @@
 @media only screen
 and (min-device-width : 768px) {
   .popover {
-    -ms-transform: scale(1.5);
-    -webkit-transform: scale(1.5);
-    transform: scale(1.5);
+    -ms-transform: scale(1.1);
+    -webkit-transform: scale(1.1);
+    transform: scale(1.1);
   }
 }
 .popover {
   position: absolute !important;
-  left: 35% !important;
+  left: 38% !important;
   top: 25% !important;
   /*position: absolute;
   top: 0;
