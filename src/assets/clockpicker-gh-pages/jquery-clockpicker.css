@@ -2,7 +2,7 @@
  * ClockPicker v0.0.7 for jQuery (http://weareoutman.github.io/clockpicker/)
  * Copyright 2014 Wang Shenwei.
  * Licensed under MIT (https://github.com/weareoutman/clockpicker/blob/gh-pages/LICENSE)
- * 
+ *
  * Bootstrap v3.1.1 (http://getbootstrap.com)
  * Copyright 2011-2014 Twitter, Inc.
  * Licensed under MIT (https://github.com/twbs/bootstrap/blob/master/LICENSE)
@@ -11,14 +11,13 @@
 /* Picked from bootstrap: .popover, .btn, .text-primary */
 
 
-@media only screen 
-and (min-device-width : 768px) 
-and (max-device-width : 1024px){ 
+@media only screen
+and (min-device-width : 768px) {
   .popover {
     -ms-transform: scale(1.5);
-    -webkit-transform: scale(1.5); 
+    -webkit-transform: scale(1.5);
     transform: scale(1.5);
-  } 
+  }
 }
 .popover {
   position: absolute !important;
@@ -374,7 +373,7 @@ and (max-device-width : 1024px){
 	padding: 5px;
 	border: 1px solid rgba(0, 0, 0, .2);
 	border-radius: 4px;
-	
+
 }
 .clockpicker-button.pm-button {
 	margin: 1px 1px 1px 136px;

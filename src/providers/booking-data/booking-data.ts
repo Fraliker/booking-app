@@ -113,7 +113,7 @@ export class BookingDataProvider {
     });
   }
 
-  save(newData): Promise<Booking[]> {
+  save(newData): Promise<Booking> {
 
     let isUpdate = false;
     if(newData.id) {
@@ -123,7 +123,7 @@ export class BookingDataProvider {
 
     let now = Moment();
     let startTime = new Date(newData.bookDate);
-    
+
     startTime.setHours(newData.bookStartTime.split(":")[0]);
     startTime.setMinutes(newData.bookStartTime.split(":")[1]);
     startTime.setMilliseconds(0);
@@ -136,7 +136,7 @@ export class BookingDataProvider {
     let endTimeField = { endTime };
 
     let checkin = false;
-    
+
     if(Moment(startTime).isBefore(now)) {
       checkin = true;
     }
@@ -153,14 +153,20 @@ export class BookingDataProvider {
 
       if(isUpdate) {
 
-        const duplicateResult = bookingArray.filter(data => {
-            return newDataWithId.id !== data.id && newDataWithId.room === data.room && ( 
+        const duplicateResult:Booking[] = bookingArray.filter(data => {
+            return newDataWithId.id !== data.id && newDataWithId.room === data.room && (
               (Moment(newDataWithId.startTime).isSameOrAfter(Moment(data.startTime)) &&  Moment(newDataWithId.startTime).isBefore(Moment(data.endTime)))  ||
-              (Moment(newDataWithId.endTime).isAfter(Moment(data.startTime)) &&  Moment(newDataWithId.endTime).isSameOrBefore(Moment(data.endTime)))  
+              (Moment(newDataWithId.endTime).isAfter(Moment(data.startTime)) &&  Moment(newDataWithId.endTime).isSameOrBefore(Moment(data.endTime)))
             )
         });
         if(duplicateResult.length>0 ){
-          throw 'Duplicate room booking detected'; 
+
+          const msg:String[] = [];
+          for (let item of duplicateResult) {
+
+              msg.push(`<li>${item.fullName} : ${item.bookStartTime} - ${item.bookEndTime}</li>`);
+          }
+          throw 'Your room booking time is conflicting with following events : <ul>'+msg.join('')+'</ul>';
         }
 
         bookingArray = bookingArray.map( value => {
@@ -173,17 +179,21 @@ export class BookingDataProvider {
       }
       else {
 
-        const duplicateResult = bookingArray.filter(data => {
-            return newDataWithId.room === data.room && ( 
+        const duplicateResult:Booking[] = bookingArray.filter(data => {
+            return newDataWithId.room === data.room && (
               (Moment(newDataWithId.startTime).isSameOrAfter(Moment(data.startTime)) &&  Moment(newDataWithId.startTime).isBefore(Moment(data.endTime)))  ||
-              (Moment(newDataWithId.endTime).isAfter(Moment(data.startTime)) &&  Moment(newDataWithId.endTime).isSameOrBefore(Moment(data.endTime)))  
+              (Moment(newDataWithId.endTime).isAfter(Moment(data.startTime)) &&  Moment(newDataWithId.endTime).isSameOrBefore(Moment(data.endTime)))
             )
         });
 
         if(duplicateResult.length>0 ){
-          throw 'Duplicate room booking detected'; 
+          const msg:String[] = [];
+          for (let item of duplicateResult) {
+              msg.push(`<li>${item.fullName} : ${item.bookStartTime} - ${item.bookEndTime}</li>`);
+          }
+          throw 'Your room booking time is conflicting with following events : <ul>'+msg.join('')+'</ul>';
         }
-        
+
         bookingArray.push(newDataWithId);
       }
 
@@ -191,7 +201,7 @@ export class BookingDataProvider {
 
       let operationField = { operation : isUpdate?'UPDATE':'NEW'};
       this.subject.next( { ...this.convertBookToEvent(newDataWithId), ...operationField});
-      return Promise.resolve(bookingArray);
+      return Promise.resolve(newDataWithId);
     });
   }
 

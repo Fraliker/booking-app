@@ -56,7 +56,7 @@ export class RoomBookingPage {
       },
       beforeHide: function(){
         loading.dismiss();
-      }, 
+      },
       afterDone: function(val) {
           that.bookingForm.controls['bookStartTime'].setValue(val);
           const splitVal = val.split(':');
@@ -66,7 +66,7 @@ export class RoomBookingPage {
           selectedTime.add(1,'hour');
           that.bookingForm.controls['bookEndTime'].setValue(selectedTime.format('HH:mm'));
       }
-    }); 
+    });
     $(this.bookEndTime.nativeElement).clockpicker({
       autoclose: false,
       placement: 'right',
@@ -83,8 +83,8 @@ export class RoomBookingPage {
       afterDone: function(val) {
           that.bookingForm.controls['bookEndTime'].setValue(val);
       }
-    }); 
-    
+    });
+
     // this.renderer.listen(this.bookStartTime.nativeElement,'onOk', function(val) {
     //     //console.log('onok' + that.startTimeDialog.time);
     //     that.bookingForm.controls['bookStartTime'].setValue(that.startTimeDialog.time.format('HH:mm'));
@@ -134,10 +134,14 @@ export class RoomBookingPage {
     console.log(bookingFormValue);
     this.bookingDataProvider.save(bookingFormValue).then(data => {
       //this.initForm();
-      this.showAlert('Successfully booked the room');
+      let addMsg ='';
+      if(data.checkin === true) {
+        addMsg ='and check-in';
+      }
+      this.showAlert(`Successfully booked ${addMsg} the room`);
       this.navCtrl.pop();
     }).catch(reason => {
-      this.showAlert(reason);
+      this.showAlert(reason, 'Error');
     });
   }
 
@@ -151,7 +155,7 @@ export class RoomBookingPage {
 
   checkIn() {
     this.bookingDataProvider.checkIn(this.idValue.id).then( data => {
-      this.showAlert('Successfully check in the room');
+      this.showAlert('Successfully check-in the room');
       this.navCtrl.pop();
     }
     );
@@ -166,9 +170,9 @@ export class RoomBookingPage {
     this.bookingForm.patchValue({bookEndTime: `${hour}:${minute}`});
   }
 
-  showAlert(msg) {
+  showAlert(msg, title: string = 'Information') {
     let alert = this.alertCtrl.create({
-      title: 'Information',
+      title: title,
       subTitle: msg,
       buttons: ['OK']
     });
