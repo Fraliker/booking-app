@@ -206,11 +206,27 @@ export class RoomStatusPage {
   }
 
    goToRoomBooking() {
+     let currentTime = Moment();
+     let currentHour  = currentTime.hours();
+     let currentMin  = currentTime.minutes();
+
+     if(currentMin>30) {
+       currentTime.set('hour',currentHour+1);
+     } else {
+       currentTime.set('hour',currentHour);
+     }
+
+     if(currentMin>=20 && currentMin<=30) {
+        currentTime.set('minute',30);
+     } else {
+        currentTime.set('minute',0);
+     }
+
      this.navCtrl.push(RoomBookingPage, {
          bookDate: this.selectedDate.toISOString(),
          room: 'Room 7B',
-         bookStartTime: '09:00',
-         bookEndTime: '10:00'
+         bookStartTime: currentTime.format('HH:mm'),
+         bookEndTime: currentTime.add(1,'hour').format('HH:mm')
      });
    }
 
