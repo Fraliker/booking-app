@@ -6,6 +6,7 @@ The offline booking hybrid application running in iPad/Android device. The appli
 * Calendar display in 3 different views : day, week and month
 * Check-in action is required prior starting booking time
 * Automatic deletion of the booking record for those missed the check-in
+* Always on display between 8am - 7pm. However to awake the screen from sleeping, it requires user to unlock iPad and open the app
 
 ## Technology
 
