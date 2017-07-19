@@ -1,3 +1,4 @@
+@import "../theme/variables";
 // http://ionicframework.com/docs/v2/theming/
 
 
@@ -41,6 +42,10 @@
 
 .text-center {
     text-align: center;
+}
+
+.bar-button-default-md:hover:not(.disable-hover), .bar-button-clear-md-default:hover:not(.disable-hover), .bar-button-md-default:hover:not(.disable-hover) {
+  color:  map-get($colors, 'light') !important;
 }
 
 $popover-md-width: 480px;

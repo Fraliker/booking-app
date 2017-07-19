@@ -7,14 +7,19 @@
 <ion-header>
   <ion-navbar color="primary">
     <ion-title>Book Meeting Room</ion-title>
+    <ion-buttons end>
+      <button ion-button icon-only  (click)="openHelp()">
+        <ion-icon name="help"></ion-icon>&nbsp;&nbsp;&nbsp;
+      </button>
+    </ion-buttons>
   </ion-navbar>
 </ion-header>
 <ion-content padding>
 <ion-list>
 <form (ngSubmit)="submitForm()" [formGroup]="bookingForm">
   <ion-item>
-    <ion-label floating>Full Name</ion-label>
-    <ion-input type="text" formControlName="fullName" required clearInput="true"></ion-input>
+    <ion-label floating>Full Name / Event Title</ion-label>
+    <ion-input type="text" formControlName="fullName" required clearInput="true" [class.invalid]="!bookingForm.controls.fullName.valid && submitAttempt"> </ion-input>
   </ion-item>
  <ion-item>
     <ion-label>Room
@@ -25,9 +30,6 @@
       <ion-option>Room 7D</ion-option>
       <ion-option>Town Hall</ion-option>
     </ion-select>
-    <button>
-        <ion-icon name="help-circle"></ion-icon>
-      </button>
   </ion-item>
   <ion-item>
     <ion-label>Book Date</ion-label>
@@ -44,9 +46,21 @@
     <ion-input type="text" #bookEndTime formControlName="bookEndTime" required readonly="true"></ion-input>
   </ion-item>
   <button ion-button color="secondary2" type="button" *ngIf="enableCheckin" block (click)="checkIn()">Check in</button>
-  <button ion-button color="secondary" type="submit" [disabled]="!bookingForm.valid" block>Submit</button>
-  <button ion-button color="danger" type="button" *ngIf="enableDelete" block (click)="delete()">Cancel</button>
+  <button ion-button color="secondary" type="submit" block>Submit</button>
+  <button ion-button color="danger" type="button" *ngIf="enableDelete" block (click)="presentConfirmDelete()">Cancel</button>
 </form>
 </ion-list>
 
+
 </ion-content>
+<ion-footer>
+  <ion-toolbar>
+     <ion-badge color="light">
+    Note : For the first time user, please read some information available on the help page ( <ion-icon name="help"></ion-icon> at top right of the screen)
+ </ion-badge>
+          <ion-buttons end>
+     <img src="assets/img/logo.png" width="60"/>
+          </ion-buttons>
+  </ion-toolbar>
+</ion-footer>
+

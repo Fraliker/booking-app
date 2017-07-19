@@ -2,6 +2,9 @@ page-room-booking {
     .text-input {
       text-align: right;
     }
+    .invalid {
+        border: 1px solid #ea6153;
+    }
 }
 
 .alert-wrapper {

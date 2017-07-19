@@ -1,10 +1,11 @@
 import { Component, ViewChild, ElementRef, Renderer } from '@angular/core';
-import { IonicPage, NavController, NavParams, LoadingController } from 'ionic-angular';
+import { IonicPage, NavController, NavParams, LoadingController, ModalController } from 'ionic-angular';
 import { Validators, FormBuilder, FormGroup } from '@angular/forms';
 import { BookingDataProvider } from '../../providers/booking-data/booking-data';
 import { Storage } from '@ionic/storage';
 import { AlertController } from 'ionic-angular';
 import * as Moment from "moment";
+import { HelpPage } from '../help/help';
 /**
  * Generated class for the RoomBookingPage page.
  *
@@ -32,10 +33,11 @@ export class RoomBookingPage {
   idValue;
   startTimeDialog;
   endTimeDialog;
+  submitAttempt = false;
 
   constructor(public navCtrl: NavController, public navParams: NavParams, private formBuilder: FormBuilder,
    private storage: Storage, public bookingDataProvider: BookingDataProvider, public alertCtrl: AlertController,
-   private renderer: Renderer,public loadingCtrl: LoadingController) {
+   private renderer: Renderer,public loadingCtrl: LoadingController,public modalCtrl: ModalController) {
     this.initForm(this.navParams.data);
   }
 
@@ -128,10 +130,37 @@ export class RoomBookingPage {
     });
   }
 
-  submitForm() {
+  presentConfirmDelete() {
+    const that = this;
+    let alert = this.alertCtrl.create({
+      title: 'Confirmation',
+      message: 'Do you want to delete this booking?',
+      buttons: [
+        {
+          text: 'No',
+          role: 'cancel',
+          handler: () => {
+            console.log('Cancel clicked');
+          }
+        },
+        {
+          text: 'Yes',
+          handler: () => {
+            that.delete();
+          }
+        }
+      ]
+    });
+    alert.present();
+}
 
+  submitForm() {
+    this.submitAttempt = true;
+    if(!this.bookingForm.valid) {
+      return;
+    }
     let bookingFormValue = { ...this.bookingForm.value, ...this.idValue };
-    console.log(bookingFormValue);
+
     this.bookingDataProvider.save(bookingFormValue).then(data => {
       //this.initForm();
       let addMsg ='';
@@ -178,27 +207,9 @@ export class RoomBookingPage {
     });
     alert.present();
   }
-
-  showStartTimeDialog(event) {
-    // const val:string = event.target.value;
-    // if(!val) return;
-    // const splitVal = val.split(':');
-    // const selectedTime = Moment();
-    // selectedTime.set('hour',+splitVal[0]);
-    // selectedTime.set('minute',+splitVal[1]);
-    // this.startTimeDialog.time = selectedTime;
-    // this.startTimeDialog.toggle();
+  openHelp() {
+    let profileModal = this.modalCtrl.create(HelpPage, { });
+    profileModal.present();
   }
-
-  // showEndTimeDialog(event) {
-  //   const val:string = event.target.value;
-  //   if(!val) return;
-  //   const splitVal = val.split(':');
-  //   const selectedTime = Moment();
-  //   selectedTime.set('hour',+splitVal[0]);
-  //   selectedTime.set('minute',+splitVal[1]);
-  //   this.endTimeDialog.time = selectedTime;
-  //   this.endTimeDialog.toggle();
-  // }
 
 }

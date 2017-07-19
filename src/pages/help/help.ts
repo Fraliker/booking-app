@@ -16,25 +16,7 @@ export class HelpPage {
 
    ionViewDidLoad() {
 
-    // this.storage.ready().then(() => {
-    //   this.storage.get("booking").then((val) => {
-
-    //     val.forEach(element => {
-    //       console.log("val "+JSON.stringify(element));
-    //     });
-    //    });
-    // });
-
-
    }
 
-   goToRoomBooking() {
-
-     this.navCtrl.push(RoomBookingPage);
-   }
-   goToRoomStatus() {
-
-     this.navCtrl.push(RoomStatusPage);
-   }
 
 }
