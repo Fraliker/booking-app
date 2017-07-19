@@ -1,8 +1,7 @@
 {
   "name": "booking-app",
   "version": "0.0.1",
-  "author": "Ionic Framework",
-  "homepage": "http://ionicframework.com/",
+  "author": "Wiyanto Ngasinur",
   "private": true,
   "scripts": {
     "clean": "ionic-app-scripts clean",
@@ -55,7 +54,7 @@
     "@ionic/cli-plugin-ionic-angular": "1.3.2",
     "typescript": "2.3.3"
   },
-  "description": "An Ionic project",
+  "description": "The offline booking hybrid application running in iPad/Android device",
   "cordova": {
     "plugins": {
       "cordova-sqlite-storage": {},
