@@ -9,13 +9,17 @@ The offline booking hybrid application running in iPad/Android device. The appli
 
 ## Technology
 
-* Ionic 2 Framework
-* Typescript
+* [Ionic 2 Framework](https://ionicframework.com)
+* [Typescript](https://www.typescriptlang.org/)
 * [Ionic2-Calendar](https://github.com/twinssbc/Ionic2-Calendar)
 * [jQuery clockpicker](https://weareoutman.github.io/clockpicker/)
 
-## Software requirement to build and run
+## Software requirements to build and run
 
 * Node/NPM
+* Install Cordova, Ionic, Typescript NPM package
+ * `npm install -g cordova ionic typescript`
 * Chrome (to run in browser)
+ * `ionic serve`
 * Xcode (to run natively in iOS emulator)
+ * `ionic cordova run ios`
