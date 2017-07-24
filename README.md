@@ -8,9 +8,10 @@ The offline booking hybrid application running in iPad/Android device. The appli
 * Automatic deletion of the booking record for those missed the check-in
 * Always on display between 8am - 7pm. However to awake the screen from sleeping, it requires user to unlock iPad and open the app
 
-## Technology
+## Technologies
 
 * [Ionic 2 Framework](https://ionicframework.com)
+* [Ionic Storage](https://ionicframework.com/docs/storage/)
 * [Typescript](https://www.typescriptlang.org/)
 * [Ionic2-Calendar](https://github.com/twinssbc/Ionic2-Calendar)
 * [jQuery clockpicker](https://weareoutman.github.io/clockpicker/)
